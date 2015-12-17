@@ -40,8 +40,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Queue;
 
@@ -122,14 +125,16 @@ public class BeaconReceiverActivity extends Activity implements GoogleApiClient.
     private void showLocation(){
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
        // mLastLocation=locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
+      //  String str="Location not found";
         if(mLastLocation!=null){
 
             Double latitude = mLastLocation.getLatitude();
             Double longitude = mLastLocation.getLongitude();
             txtLatitude.setText(Double.toString(latitude));
             txtLongitude.setText(Double.toString(longitude));
+          //  str="Longitude : "+Double.toString(longitude)+" , Latitude : "+Double.toString(latitude);
             Log.d("location :","Longitute : "+longitude+" , Latitude :"+latitude);
+
         }
         else{
             Toast.makeText(getApplicationContext(),"Last Location is null",Toast.LENGTH_LONG).show();
@@ -214,9 +219,59 @@ public class BeaconReceiverActivity extends Activity implements GoogleApiClient.
                         1,
                         alarm,
                         PendingIntent.FLAG_CANCEL_CURRENT);
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest, recurringAlarm);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, recurringAlarm);
     }
 
+    /*public void appendLog(String text)
+    {
+        File logFile = new File(context.getFilesDir(),"log.file");
+        Toast.makeText(getApplicationContext(),context.getFilesDir().toString(),Toast.LENGTH_LONG).show();
+        if (!logFile.exists())
+        {
+            try
+            {
+                logFile.createNewFile();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf.append(text);
+            buf.newLine();
+            buf.close();
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void readFile(){
+        FileInputStream fis;
+        final StringBuffer storedString = new StringBuffer();
+
+        try {
+            fis = openFileInput("out.txt");
+            DataInputStream dataIO = new DataInputStream(fis);
+            String strLine = null;
+
+            if ((strLine = dataIO.readLine()) != null) {
+                storedString.append(strLine);
+            }
+
+            dataIO.close();
+            fis.close();
+        }
+        catch  (Exception e) {
+        }
+    }*/
 
     @Override
     public void onLocationChanged(Location location) {
